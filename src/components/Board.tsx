@@ -9,6 +9,17 @@ export interface BoardState {
 }
 
 export class Board extends Component<BoardProps, BoardState> {
+  private _winningStates: number[][] = [
+    [0, 1, 2], // Rows
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6], // Columns
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8], // Diagonals
+    [2, 4, 6],
+  ];
+
   constructor(props: BoardProps) {
     super(props);
     this.state = {
@@ -17,10 +28,18 @@ export class Board extends Component<BoardProps, BoardState> {
     };
   }
 
+  private _calculateWinner(board: (string | null)[]): string | null {
+    for (let i = 0; i < this._winningStates.length; i++) {
+      const [i1, i2, i3] = this._winningStates[i];
+      if (board[i1] && board[i1] === board[i2] && board[i1] === board[i3])
+        return board[i1];
+    }
+    return null;
+  }
+
   private _handleClick(index: number) {
     const { squares, isXNext } = this.state;
-    if (squares[index]) {
-      // Cell already has a value!
+    if (squares[index] || this._calculateWinner(squares)) {
       return;
     }
 
@@ -38,8 +57,14 @@ export class Board extends Component<BoardProps, BoardState> {
   }
 
   public render() {
-    const { isXNext } = this.state;
-    const status = `Next player: ${isXNext ? 'X' : 'O'}`;
+    const { squares, isXNext } = this.state;
+    const winner = this._calculateWinner(squares);
+    let status: string;
+    if (winner) {
+      status = `Winner: ${winner}`;
+    } else {
+      status = `Next player: ${isXNext ? 'X' : 'O'}`;
+    }
 
     return (
       <div>
