@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Board } from './Board';
 
-export class Game extends Component {
+export interface GameProps {}
+
+export class Game extends Component<GameProps, {}> {
   public render() {
     return (
       <div className="game">

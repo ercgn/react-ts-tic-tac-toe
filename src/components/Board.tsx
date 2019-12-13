@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Square } from './Square';
 
-export class Board extends Component {
+export interface BoardProps {}
+
+export class Board extends Component<BoardProps, {}> {
   renderSquare(i: number) {
-    return <Square />;
+    return <Square value={i} />;
   }
 
   render() {
