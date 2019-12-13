@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { Board } from './Board';
+import { SquareValue } from './Square';
+
+interface HistoryItem {
+  squares: SquareValue[];
+}
 
 interface GameProps {}
 
 interface GameState {
-  history: {
-    squares: (string | null)[];
-  }[];
+  history: HistoryItem[];
   isXNext: boolean;
+  stepNumber: number;
 }
 
 export class Game extends Component<GameProps, GameState> {
@@ -32,11 +36,13 @@ export class Game extends Component<GameProps, GameState> {
         },
       ],
       isXNext: true,
+      stepNumber: 0,
     };
   }
 
   private _handleClick(index: number) {
-    const { history, isXNext } = this.state;
+    const { isXNext, stepNumber } = this.state;
+    const history = this.state.history.slice(0, stepNumber + 1);
     const current = history[history.length - 1];
 
     if (current.squares[index] || this._calculateWinner(current.squares)) {
@@ -47,6 +53,7 @@ export class Game extends Component<GameProps, GameState> {
     squares[index] = isXNext ? 'X' : 'O';
     this.setState({
       history: [...history, { squares: squares }],
+      stepNumber: history.length++,
       isXNext: !isXNext,
     });
   }
@@ -64,9 +71,21 @@ export class Game extends Component<GameProps, GameState> {
     return null;
   }
 
-  public render() {
-    const { history, isXNext } = this.state;
-    const current = history[history.length - 1];
+  private _getCurrentHistory(): HistoryItem {
+    const { history, stepNumber } = this.state;
+    return history[stepNumber];
+  }
+
+  private _jumpTo(step: number): void {
+    this.setState({
+      stepNumber: step,
+      isXNext: step % 2 === 0,
+    });
+  }
+
+  private _renderStatus(): string {
+    const { isXNext } = this.state;
+    const current = this._getCurrentHistory();
     const winner = this._calculateWinner(current.squares);
     let status: string;
     if (winner) {
@@ -74,18 +93,34 @@ export class Game extends Component<GameProps, GameState> {
     } else {
       status = `Next player: ${isXNext ? 'X' : 'O'}`;
     }
+    return status;
+  }
 
+  private _renderMovesHistory() {
+    const { history } = this.state;
+
+    return history.map((step: HistoryItem, move: number) => {
+      const desc = move ? 'Go to move #' + move : 'Go to game start';
+      return (
+        <li key={move}>
+          <button onClick={() => this._jumpTo(move)}>{desc}</button>
+        </li>
+      );
+    });
+  }
+
+  public render() {
     return (
       <div className="game">
         <div className="game-board">
           <Board
-            squares={current.squares}
+            squares={this._getCurrentHistory().squares}
             onClick={(i: number) => this._handleClick(i)}
           />
         </div>
         <div className="game-info">
-          <div>{status}</div>
-          <ol>{/* TODO */}</ol>
+          <div>{this._renderStatus()}</div>
+          <ol>{this._renderMovesHistory()}</ol>
         </div>
       </div>
     );

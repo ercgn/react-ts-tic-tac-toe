@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Square } from './Square';
+import { Square, SquareValue } from './Square';
 
 export interface BoardProps {
-  squares: (string | null)[];
+  squares: SquareValue[];
   onClick: (index: number) => void;
 }
 
