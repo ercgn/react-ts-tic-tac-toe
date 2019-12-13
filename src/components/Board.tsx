@@ -5,6 +5,7 @@ export interface BoardProps {}
 
 export interface BoardState {
   squares: (string | null)[];
+  isXNext: boolean;
 }
 
 export class Board extends Component<BoardProps, BoardState> {
@@ -12,13 +13,23 @@ export class Board extends Component<BoardProps, BoardState> {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
+      isXNext: true,
     };
   }
 
   private _handleClick(index: number) {
-    const squares = this.state.squares.slice();
-    squares[index] = 'X';
-    this.setState({ squares: squares });
+    const { squares, isXNext } = this.state;
+    if (squares[index]) {
+      // Cell already has a value!
+      return;
+    }
+
+    const newSquares = squares.slice();
+    newSquares[index] = isXNext ? 'X' : 'O';
+    this.setState({
+      squares: newSquares,
+      isXNext: !isXNext,
+    });
   }
 
   private _renderSquare(i: number) {
@@ -27,7 +38,8 @@ export class Board extends Component<BoardProps, BoardState> {
   }
 
   public render() {
-    const status = 'Next player: X';
+    const { isXNext } = this.state;
+    const status = `Next player: ${isXNext ? 'X' : 'O'}`;
 
     return (
       <div>
