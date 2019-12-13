@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Square } from './Square';
 
-export class Board extends React.Component {
+export class Board extends Component {
   renderSquare(i: number) {
     return <Square />;
   }
