@@ -15,9 +15,15 @@ export class Board extends Component<BoardProps, BoardState> {
     };
   }
 
+  private _handleClick(index: number) {
+    const squares = this.state.squares.slice();
+    squares[index] = 'X';
+    this.setState({ squares: squares });
+  }
+
   private _renderSquare(i: number) {
     const { squares } = this.state;
-    return <Square value={squares[i]} />;
+    return <Square value={squares[i]} onClick={() => this._handleClick(i)} />;
   }
 
   public render() {

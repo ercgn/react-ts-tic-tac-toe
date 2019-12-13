@@ -2,28 +2,15 @@ import React, { Component } from 'react';
 
 interface SquareProps {
   value: string | null;
+  onClick: () => void;
 }
 
-interface SquareState {
-  currentValue: string | null;
-}
-
-export class Square extends Component<SquareProps, SquareState> {
-  constructor(props: SquareProps) {
-    super(props);
-    this.state = {
-      currentValue: '',
-    };
-  }
-
+export class Square extends Component<SquareProps, {}> {
   public render() {
-    const { currentValue } = this.state;
+    const { value, onClick } = this.props;
     return (
-      <button
-        className="square"
-        onClick={() => this.setState({ currentValue: 'X' })}
-      >
-        {currentValue}
+      <button className="square" onClick={onClick}>
+        {value}
       </button>
     );
   }
