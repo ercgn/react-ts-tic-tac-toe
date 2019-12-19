@@ -6,15 +6,12 @@ interface SquareProps {
   onClick: () => void;
 }
 
-export class Square extends Component<SquareProps, {}> {
-  public render() {
-    const { value, onClick } = this.props;
-    return (
-      <button className="square" onClick={onClick}>
-        {value}
-      </button>
-    );
-  }
-}
+export const Square = ({ value, onClick }: SquareProps) => {
+  return (
+    <button className="square" onClick={onClick}>
+      {value}
+    </button>
+  );
+};
 
 export default Square;

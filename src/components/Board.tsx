@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Square, SquareValue } from './Square';
 
 export interface BoardProps {
@@ -6,33 +6,30 @@ export interface BoardProps {
   onClick: (index: number) => void;
 }
 
-export class Board extends Component<BoardProps, {}> {
-  private _renderSquare(i: number) {
-    const { squares, onClick } = this.props;
+export const Board = ({ squares, onClick }: BoardProps) => {
+  const renderSquare = (i: number) => {
     return <Square value={squares[i]} onClick={() => onClick(i)} />;
-  }
+  };
 
-  public render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this._renderSquare(0)}
-          {this._renderSquare(1)}
-          {this._renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this._renderSquare(3)}
-          {this._renderSquare(4)}
-          {this._renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this._renderSquare(6)}
-          {this._renderSquare(7)}
-          {this._renderSquare(8)}
-        </div>
+  return (
+    <div>
+      <div className="board-row">
+        {renderSquare(0)}
+        {renderSquare(1)}
+        {renderSquare(2)}
       </div>
-    );
-  }
-}
+      <div className="board-row">
+        {renderSquare(3)}
+        {renderSquare(4)}
+        {renderSquare(5)}
+      </div>
+      <div className="board-row">
+        {renderSquare(6)}
+        {renderSquare(7)}
+        {renderSquare(8)}
+      </div>
+    </div>
+  );
+};
 
 export default Board;
